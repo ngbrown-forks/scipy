@@ -341,7 +341,7 @@ def welch(x, fs=1.0, window='hann', nperseg=None, noverlap=None, nfft=None,
     axis : int, optional
         Axis along which the periodogram is computed; the default is
         over the last axis (i.e. ``axis=-1``).
-    average : { 'mean', 'median' }, optional
+    average : { 'mean', 'median', 'max' }, optional
         Method to use when averaging periodograms. Defaults to 'mean'.
 
         .. versionadded:: 1.2.0
@@ -503,7 +503,7 @@ def csd(x, y, fs=1.0, window='hann', nperseg=None, noverlap=None, nfft=None,
     axis : int, optional
         Axis along which the CSD is computed for both inputs; the
         default is over the last axis (i.e. ``axis=-1``).
-    average : { 'mean', 'median' }, optional
+    average : { 'mean', 'median', 'max' }, optional
         Method to use when averaging periodograms. If the spectrum is
         complex, the average is computed separately for the real and
         imaginary parts. Defaults to 'mean'.
@@ -596,8 +596,10 @@ def csd(x, y, fs=1.0, window='hann', nperseg=None, noverlap=None, nfft=None,
                     Pxy = np.median(Pxy, axis=-1) / _median_bias(Pxy.shape[-1])
             elif average == 'mean':
                 Pxy = Pxy.mean(axis=-1)
+            elif average == 'max':
+                Pxy = Pxy.max(axis=-1)
             else:
-                raise ValueError('average must be "median" or "mean", got %s'
+                raise ValueError('average must be "median", "mean", or "max", got %s'
                                  % (average,))
         else:
             Pxy = np.reshape(Pxy, Pxy.shape[:-1])
